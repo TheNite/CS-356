@@ -12,7 +12,7 @@ max_tries = 3
 
 # Create UDP client socket. Note the use of SOCK_DGRAM
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-clientsocket.settimeout(1)
+clientsocket.settimeout(1)  # 1 Second timeout
 
 while True:
 
