@@ -32,7 +32,6 @@ while True:
     except socket.timeout:
         print(f'Message timed out')
         max_tries -= 1
-        continue
 
 #Close the client socket
 clientsocket.close()
