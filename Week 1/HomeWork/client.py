@@ -20,17 +20,17 @@ while True:
         break
 
     # Send data to server
-    print("Sending data to   " + host + ", " + str(port) + ": " + data)
+    print(f"Sending data to {host}, {port} : {data} ({len(data)} characters)")
     clientsocket.sendto(data.encode(), (host, port))
 
     try:
         # Receive the server response
         dataEcho, address = clientsocket.recvfrom(count)
-        print(dataEcho, address)
-        print("Receive data from " + address[0] + ", " + str(address[1]) + ": " + dataEcho.decode())
+        # print(dataEcho, address)
+        print(f"Receive data from {address[0]}, {address[1]}: {dataEcho.decode()}")
         break
     except socket.timeout:
-        print(f'Message timed out')
+        print('Message timed out')
         max_tries -= 1
 
 #Close the client socket

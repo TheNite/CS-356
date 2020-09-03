@@ -17,7 +17,7 @@ print("The server is ready to receive on port:  " + str(serverPort) + "\n")
 # loop forever listening for incoming UDP messages
 while True:
     # Receive and print the client data from "data" socket
-    data, address = serverSocket.recvfrom(1024)
+    data, address = serverSocket.recvfrom(100)
     print("Receive data from client " + address[0] + ", " + str(address[1]) + ": " + data.decode())
 
     # Echo back to client
