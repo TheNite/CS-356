@@ -1,5 +1,11 @@
 #! /usr/bin/env python3
-# Echo Server
+
+'''
+Paul Cruz
+psc28
+CS 356-001
+'''
+
 import sys
 import socket
 

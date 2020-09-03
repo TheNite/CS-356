@@ -1,5 +1,11 @@
 #! /usr/bin/env python3
-# Echo Client
+
+'''
+Paul Cruz
+psc28
+CS 356-001
+'''
+
 import sys
 import socket
 
@@ -20,6 +26,7 @@ while True:
         break
 
     # Send data to server
+    # Literal String Interpolation - https://www.python.org/dev/peps/pep-0498/
     print(f"Sending data to {host}, {port} : {data} ({len(data)} characters)")
     clientsocket.sendto(data.encode(), (host, port))
 
