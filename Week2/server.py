@@ -8,6 +8,9 @@ CS 356-001
 
 import sys
 import socket
+import struct
+import random
+
 
 # Read server IP address and port from command-line arguments
 serverIP = sys.argv[1]
@@ -22,10 +25,17 @@ print("The server is ready to receive on port:  " + str(serverPort) + "\n")
 
 # loop forever listening for incoming UDP messages
 while True:
-    # Receive and print the client data from "data" socket
     data, address = serverSocket.recvfrom(100)
-    print("Receive data from client " + address[0] + ", " + str(address[1]) + ": " + data.decode())
+    choice = random.randint(1, 10)
+    # Receive and print the client data from "data" socket
+    print(choice)
+    if choice > 4:
+        data = struct.unpack('!i', data)[0]
+        print("Receive data from client " + address[0] + ", " + str(address[1]) + ": " + str(data))
 
-    # Echo back to client
-    print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + data.decode())
-    serverSocket.sendto(data,address)
+        data = struct.pack('!i', 2)
+        # Echo back to client
+        print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
+        serverSocket.sendto(data, address)
+    else:
+        print('Send no response')
