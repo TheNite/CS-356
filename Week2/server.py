@@ -28,7 +28,7 @@ while True:
     data, address = serverSocket.recvfrom(100)
     choice = random.randint(1, 10)
     # Receive and print the client data from "data" socket
-    print(choice)
+    print(f'Choice: {choice}')
     if choice > 4:
         data = struct.unpack('!i', data)[0]
         print("Receive data from client " + address[0] + ", " + str(address[1]) + ": " + str(data))

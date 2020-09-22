@@ -9,40 +9,56 @@ CS 356-001
 import sys
 import socket
 import struct
+import time
 
 # Get the server hostname, port and data length as command line arguments
 host = sys.argv[1]
 port = int(sys.argv[2])
 data = struct.pack('!i', 1)
-max_tries = 10
+count = 0
+max = -1
+min = 1
+avg = 0
+timeout = 0
+# max_tries = 0
+
 
 # Create UDP client socket. Note the use of SOCK_DGRAM
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientsocket.settimeout(1)  # 1 Second timeout
 
-while True:
-
-    if max_tries == 0:
-        break
+# while True:
+#
+#     if max_tries == 10:
+#         break
+print(f"Pinging {host}, {port}:")
+for i in range(10):
 
     # Send data to server
     # Literal String Interpolation - https://www.python.org/dev/peps/pep-0498/
-    print(f"Sending data to {host}, {port} : {data}")
-    clientsocket.sendto(data, (host, port))
+    t1 = time.time()
+    count += 1
 
     try:
+        clientsocket.sendto(data, (host, port))
         # Receive the server response
         dataEcho, address = clientsocket.recvfrom(100)
         dataEcho = struct.unpack('!i', dataEcho)
-        if dataEcho[0] == 2:
-            print('here')
-        # print(dataEcho, address)
-        print(f"Receive data from {address[0]}, {address[1]}: {dataEcho[0]}")
-        max_tries -= 1
-        break
+        t2 = time.time()
+        print(f"Ping Message number {count}, RTT: {t2-t1} sec")
+        avg += t2-t1
+        if t2-t1 > max:
+            max = t2-t1
+        elif t2-t1 < min:
+            min = t2-t1
     except socket.timeout:
-        print('Message timed out')
-        max_tries -= 1
+        print(f'Ping message number {count} timed out')
+        timeout += 1
+
+
+print(f'\nStatistics: \n'
+      f'{count} packets transmitted, {count-timeout} Received, {(timeout/count)*100}% packet loss\n'
+      f'Min/Max/Avg RTT = {min} / {max} / {avg/(count-timeout)} sec')
 
 #Close the client socket
 clientsocket.close()
