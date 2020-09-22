@@ -29,12 +29,12 @@ while True:
     # Receive and print the client data from "data" socket
     # print(f'Choice: {choice}')
     if choice > 4:
-        data = struct.unpack('!ii', data)
+        data = struct.unpack('!hh', data)
         print(f'Responding to ping with sequence number {data[1]}')
-        data = struct.pack('!ii', 2, data[1])
+        data = struct.pack('!hh', 2, data[1])
         # Echo back to client
         # print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
         serverSocket.sendto(data, address)
     else:
-        data = struct.unpack('!ii', data)
+        data = struct.unpack('!hh', data)
         print(f'Message with sequence number {data[1]} dropped')

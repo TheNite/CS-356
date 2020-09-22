@@ -25,14 +25,14 @@ for i in range(pings):
 
     t1 = time.time()  # Get Current time
     count += 1
-    data = struct.pack('!ii', 1, count)
+    data = struct.pack('!hh', 1, count)
 
     try:
         # Send data to server
         clientsocket.sendto(data, (host, port))
         # Receive the server response
         dataEcho, address = clientsocket.recvfrom(100)
-        dataEcho = struct.unpack('!ii', dataEcho)
+        dataEcho = struct.unpack('!hh', dataEcho)
         t2 = time.time()
         print(f"Ping Message number {count}, RTT: {t2 - t1:.10f} sec")
         avg += t2 - t1
