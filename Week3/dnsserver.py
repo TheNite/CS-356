@@ -24,7 +24,7 @@ print("The server is ready to receive on port:  " + str(serverPort) + "\n")
 
 # loop forever listening for incoming UDP messages
 while True:
-    data, address = serverSocket.recvfrom(100)
+    data, address = serverSocket.recvfrom(1024)
     choice = random.randint(1, 10)
     # Receive and print the client data from "data" socket
     # print(f'Choice: {choice}')

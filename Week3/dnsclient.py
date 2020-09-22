@@ -42,14 +42,30 @@ clientsocket.settimeout(1)  # 1 Second timeout
 print(f"Pinging {host}, {port}:")
 data = struct.pack('!hhhhis', message_type, return_code, answer_length, message_length, message_id, hostname.encode())
 
+
+def output(output_data):
+    output_data = struct.unpack('!hhhis', output_data)
+    print(f'Sending Request to {host}, {port}: '
+          f'Message ID: {message_id}'
+          f'Question Length: {message_length}'
+          f'Answer Length: {answer_length}'
+          f'Question: {hostname}\n'
+          f'Received Response from: '
+          f'Return Code: '
+          f'Message ID: '
+          f'Question Length: '
+          f'Answer Length: '
+          f'Question: '
+          f'Answer: ')
+
 try:
     # Send data to server
     clientsocket.sendto(data, (host, port))
     # Receive the server response
-    dataEcho, address = clientsocket.recvfrom(100)
-    dataEcho = struct.unpack('!hh', dataEcho)
+    dataEcho, address = clientsocket.recvfrom(1024)
+    # dataEcho = struct.unpack('!hh', dataEcho)
     t2 = time.time()
-    print(f"Ping Message number {count}, RTT: {t2 - t1:.10f} sec")
+    print(f"Ping Message number {count}, RTT: sec")
 
 except socket.timeout:
     print(f'Ping message number {count} timed out')
