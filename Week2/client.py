@@ -15,11 +15,7 @@ import time
 host = sys.argv[1]
 port = int(sys.argv[2])
 data = struct.pack('!i', 1)
-count = 0
-max = -1
-min = 1
-avg = 0
-timeout = 0
+pings, count, max_sec, min_sec, avg, timeout = 10, 0, -1, 1, 0, 0
 # max_tries = 0
 
 
@@ -32,7 +28,7 @@ clientsocket.settimeout(1)  # 1 Second timeout
 #     if max_tries == 10:
 #         break
 print(f"Pinging {host}, {port}:")
-for i in range(10):
+for i in range(pings):
 
     # Send data to server
     # Literal String Interpolation - https://www.python.org/dev/peps/pep-0498/
@@ -47,10 +43,10 @@ for i in range(10):
         t2 = time.time()
         print(f"Ping Message number {count}, RTT: {t2-t1} sec")
         avg += t2-t1
-        if t2-t1 > max:
-            max = t2-t1
-        elif t2-t1 < min:
-            min = t2-t1
+        if t2-t1 > max_sec:
+            max_sec = t2 - t1
+        elif t2-t1 < min_sec:
+            min_sec = t2 - t1
     except socket.timeout:
         print(f'Ping message number {count} timed out')
         timeout += 1
@@ -58,7 +54,7 @@ for i in range(10):
 
 print(f'\nStatistics: \n'
       f'{count} packets transmitted, {count-timeout} Received, {(timeout/count)*100}% packet loss\n'
-      f'Min/Max/Avg RTT = {min} / {max} / {avg/(count-timeout)} sec')
+      f'Min/Max/Avg RTT = {min_sec} / {max_sec} / {avg / (count - timeout)} sec')
 
 #Close the client socket
 clientsocket.close()
