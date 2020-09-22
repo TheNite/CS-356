@@ -28,14 +28,14 @@ while True:
     data, address = serverSocket.recvfrom(100)
     choice = random.randint(1, 10)
     # Receive and print the client data from "data" socket
-    print(f'Choice: {choice}')
+    #print(f'Choice: {choice}')
     if choice > 4:
-        data = struct.unpack('!i', data)[0]
-        print("Receive data from client " + address[0] + ", " + str(address[1]) + ": " + str(data))
-
-        data = struct.pack('!i', 2)
+        data = struct.unpack('!ii', data)
+        print(f'Responding to ping with sequence number {data[1]}')
+        data = struct.pack('!ii', 2, data[1])
         # Echo back to client
-        print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
+        #print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
         serverSocket.sendto(data, address)
     else:
-        print('Send no response')
+        data = struct.unpack('!ii', data)
+        print(f'Message with sequence number {data[1]} dropped')
