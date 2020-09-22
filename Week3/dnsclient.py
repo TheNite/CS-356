@@ -32,6 +32,10 @@ message_length = sys.getsizeof(hostname)
 message_id = random.randint(1, 100)     # returns a number between 1 and 100 (both included)
 
 
+error_codes = {
+    0: "No Errors",
+    1: "Name not Found",
+}
 pings, count, max_sec, min_sec, avg, timeout = 10, 0, -1, 1, 0, 0
 
 
@@ -43,14 +47,17 @@ print(f"Pinging {host}, {port}:")
 data = struct.pack('!hhhhis', message_type, return_code, answer_length, message_length, message_id, hostname.encode())
 
 
-def output(output_data):
-    output_data = struct.unpack('!hhhis', output_data)
+def client_output():
     print(f'Sending Request to {host}, {port}: '
           f'Message ID: {message_id}'
           f'Question Length: {message_length}'
           f'Answer Length: {answer_length}'
-          f'Question: {hostname}\n'
-          f'Received Response from: '
+          f'Question: {hostname}\n')
+
+
+def server_output(output_data):
+    output_data = struct.unpack('!hhhis', output_data)
+    print(f'Received Response from: '
           f'Return Code: '
           f'Message ID: '
           f'Question Length: '
@@ -62,7 +69,7 @@ try:
     # Send data to server
     clientsocket.sendto(data, (host, port))
     # Receive the server response
-    dataEcho, address = clientsocket.recvfrom(1024)
+    dataEcho, address = clientsocket.recvfrom(1024 )
     # dataEcho = struct.unpack('!hh', dataEcho)
     t2 = time.time()
     print(f"Ping Message number {count}, RTT: sec")
