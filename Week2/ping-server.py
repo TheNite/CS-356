@@ -11,7 +11,6 @@ import socket
 import struct
 import random
 
-
 # Read server IP address and port from command-line arguments
 serverIP = sys.argv[1]
 serverPort = int(sys.argv[2])
@@ -28,13 +27,13 @@ while True:
     data, address = serverSocket.recvfrom(100)
     choice = random.randint(1, 10)
     # Receive and print the client data from "data" socket
-    #print(f'Choice: {choice}')
+    # print(f'Choice: {choice}')
     if choice > 4:
         data = struct.unpack('!ii', data)
         print(f'Responding to ping with sequence number {data[1]}')
         data = struct.pack('!ii', 2, data[1])
         # Echo back to client
-        #print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
+        # print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
         serverSocket.sendto(data, address)
     else:
         data = struct.unpack('!ii', data)
