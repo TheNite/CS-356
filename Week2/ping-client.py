@@ -36,10 +36,12 @@ for i in range(pings):
         t2 = time.time()
         print(f"Ping Message number {count}, RTT: {t2 - t1:.10f} sec")
         avg += t2 - t1
+
         if t2 - t1 > max_sec:
             max_sec = t2 - t1
         elif t2 - t1 < min_sec:
             min_sec = t2 - t1
+
     except socket.timeout:
         print(f'Ping message number {count} timed out')
         timeout += 1
