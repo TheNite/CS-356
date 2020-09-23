@@ -1,15 +1,17 @@
 #! /usr/bin/env python3
 
-'''
+"""
 Paul Cruz
 psc28
 CS 356-001
-'''
+"""
 
 import sys
 import socket
 import struct
-import random
+
+# dns-master-file
+dns_records = 'dns-master.txt'
 
 # Read server IP address and port from command-line arguments
 serverIP = sys.argv[1]
@@ -20,21 +22,15 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Assign server IP address and port number to socket
 serverSocket.bind((serverIP, serverPort))
 
-print("The server is ready to receive on port:  " + str(serverPort) + "\n")
+print(f"The server is ready to receive on port: {serverPort}\n")
 
 # loop forever listening for incoming UDP messages
 while True:
     data, address = serverSocket.recvfrom(1024)
-    choice = random.randint(1, 10)
-    # Receive and print the client data from "data" socket
-    # print(f'Choice: {choice}')
-    if choice > 4:
-        data = struct.unpack('!hh', data)
-        print(f'Responding to ping with sequence number {data[1]}')
-        data = struct.pack('!hh', 2, data[1])
-        # Echo back to client
-        # print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
-        serverSocket.sendto(data, address)
-    else:
-        data = struct.unpack('!hh', data)
-        print(f'Message with sequence number {data[1]} dropped')
+    message_type, return_code, answer_length, message_length, message_id, hostname \
+        = struct.unpack('!hhhhis', data)
+
+
+    # Echo back to client
+    # print("Sending data to   client " + address[0] + ", " + str(address[1]) + ": " + str(data))
+    #serverSocket.sendto(data, address)
