@@ -37,7 +37,7 @@ Network Socket UDP
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientsocket.settimeout(1)  # 1 Second timeout
 
-
+# noinspection SpellCheckingInspection
 data = struct.pack(f'!hhhhi{message_length}s', message_type, return_code, answer_length, message_length,
                    message_id, hostname.encode())
 
