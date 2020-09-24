@@ -46,6 +46,8 @@ def search_records(dns_records, hostname):
 # loop forever listening for incoming UDP messages
 while True:
     data, address = serverSocket.recvfrom(1024)
+
+    # noinspection SpellCheckingInspection
     client_message_type, client_return_code, client_answer_length, client_message_length, \
         client_message_id = struct.unpack(f'!hhhhi', data[:12])
 
@@ -65,12 +67,15 @@ while True:
         print('Found Match!\n')
         return_code = 0  # 2 Bytes
         answer_length = sys.getsizeof(data)
-        data = struct.pack(f'!hhihh{client_message_length}s{answer_length}s', message_type, return_code, client_message_id,
-                           client_message_length, answer_length, requested_hostname.encode(), data.encode())
+        # noinspection SpellCheckingInspection
+        data = struct.pack(f'!hhihh{client_message_length}s{answer_length}s', message_type, return_code,
+                           client_message_id, client_message_length, answer_length,
+                           requested_hostname.encode(), data.encode())
     else:
         print('No Match Found!\n')
         return_code = 1  # 2 Bytes
         answer_length = 0
+        # noinspection SpellCheckingInspection
         data = struct.pack(f'!hhihh{client_message_length}s', message_type, return_code,
                            client_message_id, client_message_length, answer_length,
                            requested_hostname.encode())

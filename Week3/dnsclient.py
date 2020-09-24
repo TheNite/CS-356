@@ -15,16 +15,15 @@ import random
 host = sys.argv[1]
 port = int(sys.argv[2])
 hostname = f'{sys.argv[3]} A IN'
+max_tries = 3   # Max amount of tries program will try before exiting
 
 '''
 2 Bytes Variables
 '''
-# Default Values
 message_type = 1
 return_code = 0
 answer_length = 0
 message_length = sys.getsizeof(hostname)
-max_tries = 3
 
 '''
 4 Bytes Variables
@@ -37,6 +36,7 @@ Network Socket UDP
 # Create UDP client socket. Note the use of SOCK_DGRAM
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientsocket.settimeout(1)  # 1 Second timeout
+
 
 data = struct.pack(f'!hhhhi{message_length}s', message_type, return_code, answer_length, message_length,
                    message_id, hostname.encode())
@@ -59,6 +59,7 @@ def request_output():
 def response_output(output_data, host):
     server_message_type, server_return_code, server_message_id, server_message_length, \
         server_answer_length = struct.unpack('!hhihh', output_data[:12])
+
     print(f'\nReceived Response from: {host[0]}, {host[1]}'
           f'\nReturn Code: {server_return_code} ({error_codes[server_return_code]})'
           f'\nMessage ID: {server_message_id}'
