@@ -32,7 +32,7 @@ with open(dns_records_file, 'r') as f:
     for line in f:
         if line.strip().startswith('#') or len(line) == 1 or len(line.split()) != 5:
             continue
-        records.append(dict(zip(labels, line.strip().split(" "))))
+        records.append(dict(zip(labels, line.strip().split())))
 
 
 def search_records(dns_records, hostname):
