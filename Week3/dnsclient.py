@@ -59,9 +59,8 @@ def request_output():
 def response_output(output_data, host):
     server_message_type, server_return_code, server_message_id, server_message_length, \
         server_answer_length = struct.unpack('!hhihh', output_data[:12])
-    print(f'Server Return Code: {server_return_code}')
     print(f'\nReceived Response from: {host[0]}, {host[1]}'
-          f'\nReturn Code: {server_return_code}'
+          f'\nReturn Code: {server_return_code} ({error_codes[server_return_code]})'
           f'\nMessage ID: {server_message_id}'
           f'\nQuestion Length: {message_length}'
           f'\nAnswer Length: {server_answer_length}')

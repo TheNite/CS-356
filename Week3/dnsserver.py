@@ -30,9 +30,18 @@ print(f"The server is ready to receive on port: {serverPort}\n")
 
 with open(dns_records_file, 'r') as f:
     for line in f:
-        if line.strip().startswith('#') or len(line) == 1:
+        if line.strip().startswith('#') or len(line) == 1 or len(line.split()) != 5:
             continue
         records.append(dict(zip(labels, line.strip().split(" "))))
+
+
+def search_records(dns_records, hostname):
+    for dns_host in dns_records:
+        if hostname == dns_host['dns']:
+            return (True, f'{dns_host["dns"]} {dns_host["record"]} {dns_host["class"]} '
+                          f'{dns_host["ttl"]} {dns_host["ip"]}')
+    return False, None
+
 
 # loop forever listening for incoming UDP messages
 while True:
@@ -50,24 +59,20 @@ while True:
           f'\nAnswer Length: {client_answer_length}'
           f'\nQuestion: {requested_hostname}')
 
+    results, data = search_records(records, requested_hostname.split()[0])
 
-    for host in records:
-        # print(host)
-        if requested_hostname.split()[0] == host['dns']:
-            print('Found Match\n')
-            return_code = 0  # 2 Bytes
-            data = f'{host["dns"]} {host["record"]} {host["class"]} {host["ttl"]} {host["ip"]}'
-            answer_length = sys.getsizeof(data)
-            data = struct.pack(f'!hhihh{client_message_length}s{answer_length}s', message_type, return_code, client_message_id,
-                               client_message_length, answer_length, requested_hostname.encode(), data.encode())
-            break
-        else:
-            print('No Match found\n')
-            return_code = 1  # 2 Bytes
-            answer_length = 0
-            data = struct.pack(f'!hhihh{client_message_length}s', message_type, return_code,
-                               client_message_id, client_message_length, answer_length,
-                               requested_hostname.encode())
-            break
+    if results:
+        print('Found Match!\n')
+        return_code = 0  # 2 Bytes
+        answer_length = sys.getsizeof(data)
+        data = struct.pack(f'!hhihh{client_message_length}s{answer_length}s', message_type, return_code, client_message_id,
+                           client_message_length, answer_length, requested_hostname.encode(), data.encode())
+    else:
+        print('No Match Found!\n')
+        return_code = 1  # 2 Bytes
+        answer_length = 0
+        data = struct.pack(f'!hhihh{client_message_length}s', message_type, return_code,
+                           client_message_id, client_message_length, answer_length,
+                           requested_hostname.encode())
 
     serverSocket.sendto(data, address)

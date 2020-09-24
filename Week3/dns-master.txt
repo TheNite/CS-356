@@ -8,3 +8,4 @@ host2.student.test A IN 3600 192.168.20.2
 host3.student.test A IN 3600 192.168.30.3
 host99.student.test A IN 3600 192.168.90.9
 host123.student.test A IN 3600 192.168.120.123
+host243.student.test A IN 3600 192.158.50.13
