@@ -56,11 +56,12 @@ def request_output():
           f'\nQuestion: {hostname}')
 
 
-def response_output(output_data, host):
+def response_output(output_data, server_address):
+    # noinspection SpellCheckingInspection
     server_message_type, server_return_code, server_message_id, server_message_length, \
         server_answer_length = struct.unpack('!hhihh', output_data[:12])
 
-    print(f'\nReceived Response from: {host[0]}, {host[1]}'
+    print(f'\nReceived Response from: {server_address[0]}, {server_address[1]}'
           f'\nReturn Code: {server_return_code} ({error_codes[server_return_code]})'
           f'\nMessage ID: {server_message_id}'
           f'\nQuestion Length: {message_length}'
