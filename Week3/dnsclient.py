@@ -24,60 +24,76 @@ message_type = 1
 return_code = 0
 answer_length = 0
 message_length = sys.getsizeof(hostname)
+max_tries = 3
 
 '''
 4 Bytes Variables
 '''
 message_id = random.randint(1, 100)     # returns a number between 1 and 100 (both included)
 
+"""
+Network Socket UDP
+"""
+# Create UDP client socket. Note the use of SOCK_DGRAM
+clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+clientsocket.settimeout(1)  # 1 Second timeout
+
+data = struct.pack(f'!hhhhi{message_length}s', message_type, return_code, answer_length, message_length,
+                   message_id, hostname.encode())
+
 
 error_codes = {
     0: "No Errors",
-    1: "Name not Found",
+    1: "Name not found"
 }
 
 
 def request_output():
-    print(f'Sending Request to {host}, {port}: '
-          f'Message ID: {message_id}'
-          f'Question Length: {message_length}'
-          f'Answer Length: {answer_length}'
-          f'Question: {hostname}\n')
+    print(f'\nSending Request to {host}, {port}: '
+          f'\nMessage ID: {message_id}'
+          f'\nQuestion Length: {message_length}'
+          f'\nAnswer Length: {answer_length}'
+          f'\nQuestion: {hostname}')
 
 
 def response_output(output_data, host):
-    message_type, return_code, message_id, message_length, answer_length, question, \
-    answer = struct.unpack('!hhihhss', output_data)
-    print(f'Received Response from: {host}, {port}'
-          f'Return Code: {return_code} ({error_codes[return_code]})'
-          f'Message ID: {message_id}'
-          f'Question Length: {message_length}'
-          f'Answer Length: {answer_length}'
-          f'Question: {question.decode()}'
-          f'Answer: {answer.decode()}')
+    server_message_type, server_return_code, server_message_id, server_message_length, \
+        server_answer_length = struct.unpack('!hhihh', output_data[:12])
+    print(f'Server Return Code: {server_return_code}')
+    print(f'\nReceived Response from: {host[0]}, {host[1]}'
+          f'\nReturn Code: {server_return_code}'
+          f'\nMessage ID: {server_message_id}'
+          f'\nQuestion Length: {message_length}'
+          f'\nAnswer Length: {server_answer_length}')
+
+    server_question = struct.unpack(f'!{message_length}s', output_data[12:message_length+12])
+    print(f'Question: {server_question[0].decode()}')
+
+    if server_return_code == 0:
+        server_answer = struct.unpack(f'!{server_answer_length}s', output_data[(12+message_length):])
+        print(f'Answer: {server_answer[0].decode()}')
 
 
-# Create UDP client socket. Note the use of SOCK_DGRAM
-clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-clientsocket.settimeout(1)  # 1 Second timeout
-data = struct.pack('!hhhhis', message_type, return_code, answer_length, message_length, message_id, hostname.encode())
+while True:
 
+    if max_tries == 0:
+        print('Request timed out... Exiting Program')
+        break
 
-try:
-    request_output()
-    # Send data to server
-    clientsocket.sendto(data, (host, port))
-    # Receive the server response
-    dataEcho, address = clientsocket.recvfrom(1024)
-    response_output(dataEcho, address)
+    try:
+        # Send data to server
+        clientsocket.sendto(data, (host, port))
+        # Receive the server response
+        dataEcho, address = clientsocket.recvfrom(1024)
 
-except socket.timeout:
-    pass
+        request_output()
+        response_output(dataEcho, address)
+        break
 
-
-# print(f'\nStatistics: \n'
-#       f'{count} packets transmitted, {count - timeout} Received, {(timeout / count) * 100}% packet loss\n'
-#       f'Min/Max/Avg RTT = {min_sec:.10f} / {max_sec:.10f} / {avg / (count - timeout):.10f} sec')
+    except socket.timeout:
+        print('Request timed out....')
+        print(f'Sending Request to {host}, {port}')
+        max_tries -= 1
 
 # Close the client socket
 clientsocket.close()
