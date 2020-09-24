@@ -38,8 +38,8 @@ with open(dns_records_file, 'r') as f:
 def search_records(dns_records, hostname):
     for dns_host in dns_records:
         if hostname == dns_host['dns']:
-            return (True, f'{dns_host["dns"]} {dns_host["record"]} {dns_host["class"]} '
-                          f'{dns_host["ttl"]} {dns_host["ip"]}')
+            return True, f'{dns_host["dns"]} {dns_host["record"]} {dns_host["class"]} ' \
+                         f'{dns_host["ttl"]} {dns_host["ip"]}'
     return False, None
 
 
@@ -61,9 +61,9 @@ while True:
           f'\nAnswer Length: {client_answer_length}'
           f'\nQuestion: {requested_hostname}')
 
-    results, data = search_records(records, requested_hostname.split()[0])
+    result, data = search_records(records, requested_hostname.split()[0])
 
-    if results:
+    if result:
         print('Found Match!\n')
         return_code = 0  # 2 Bytes
         answer_length = sys.getsizeof(data)
