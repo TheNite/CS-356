@@ -51,7 +51,7 @@ while True:
     client_message_type, client_return_code, client_answer_length, client_message_length, \
         client_message_id = struct.unpack(f'!hhhhi', data[:12])
 
-    requested_hostname = struct.unpack(f'!{client_message_length}s', data[12:])
+    requested_hostname = struct.unpack_from(f'!{client_message_length}s', data[12:])
     requested_hostname = requested_hostname[0].decode()
 
     print(f'\nMessage Type: {client_message_type} '

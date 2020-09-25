@@ -67,11 +67,11 @@ def response_output(output_data, server_address):
           f'\nQuestion Length: {message_length}'
           f'\nAnswer Length: {server_answer_length}')
 
-    server_question = struct.unpack(f'!{message_length}s', output_data[12:message_length+12])
+    server_question = struct.unpack_from(f'!{message_length}s', output_data[12:])
     print(f'Question: {server_question[0].decode()}')
 
     if server_return_code == 0:
-        server_answer = struct.unpack(f'!{server_answer_length}s', output_data[(12+message_length):])
+        server_answer = struct.unpack_from(f'!{server_answer_length}s', output_data[message_length:])
         print(f'Answer: {server_answer[0].decode()}')
 
 
