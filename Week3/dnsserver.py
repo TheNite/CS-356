@@ -26,14 +26,6 @@ records = []
 labels = ['dns', 'record', 'class', 'ttl', 'ip']
 message_type = 2
 
-print(f"The server is ready to receive on port: {serverPort}\n")
-
-with open(dns_records_file, 'r') as f:
-    for line in f:
-        if line.strip().startswith('#') or len(line) == 1 or len(line.split()) != 5:
-            continue
-        records.append(dict(zip(labels, line.strip().split())))
-
 
 def search_records(dns_records, hostname):
     for dns_host in dns_records:
@@ -42,6 +34,15 @@ def search_records(dns_records, hostname):
                          f'{dns_host["ttl"]} {dns_host["ip"]}'
     return False, None
 
+
+with open(dns_records_file, 'r') as f:
+    for line in f:
+        if line.strip().startswith('#') or len(line) == 1 or len(line.split()) != 5:
+            continue
+        records.append(dict(zip(labels, line.strip().split())))
+
+
+print(f"The server is ready to receive on port: {serverPort}\n")
 
 # loop forever listening for incoming UDP messages
 while True:
