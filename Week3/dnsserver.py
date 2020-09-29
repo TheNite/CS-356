@@ -54,7 +54,7 @@ while True:
     requested_hostname = struct.unpack_from(f'!{client_message_length}s', data[12:])
     requested_hostname = requested_hostname[0].decode()
 
-    print(f'\nMessage Type: {client_message_type} '
+    print(f'\nMessage Type: {client_message_type}'
           f'\nReturn Code: {client_return_code}'
           f'\nMessage ID: {client_message_id}'
           f'\nQuestion Length: {client_message_length}'
