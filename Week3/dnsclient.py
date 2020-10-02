@@ -30,9 +30,9 @@ message_length = sys.getsizeof(hostname)
 '''
 message_id = random.randint(1, 100)     # returns a number between 1 and 100 (both included)
 
-"""
+'''
 Network Socket UDP
-"""
+'''
 # Create UDP client socket. Note the use of SOCK_DGRAM
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientsocket.settimeout(1)  # 1 Second timeout
