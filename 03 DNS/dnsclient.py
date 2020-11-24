@@ -88,7 +88,7 @@ while True:
         dataEcho, address = clientsocket.recvfrom(1024)
 
         request_output()
-        response_output(dataEcho, address)
+        c
         break
 
     except socket.timeout:

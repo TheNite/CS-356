@@ -47,14 +47,22 @@ clientSocket.sendall(GETData.encode())
 # Receive the server response
 dataEcho = clientSocket.recv(1024)
 # Display the decoded server response as an output
-dataEcho = dataEcho.decode()
+dataEcho = dataEcho.decode().split('\r\n')
 
-if "HTTP/1.1 404" in dataEcho:
-    print(f'File does not exist {filename}')
-    clientSocket.close()
-    exit()
-    
-elif ""
+for data in dataEcho:
+    if "HTTP/1.1 404" in data:
+        print(f'File does not exist {filename}')
+        clientSocket.close()
+        exit()
+
+    elif "HTTP/1.1 200" in data:
+        with open(CACHE_FILE, 'w') as f:
+            for line in f:
+                print(line)
+
+    else:
+        print(data)
+
 # Close the client socket
 clientSocket.close()
 

@@ -8,6 +8,10 @@ CS 356-001
 
 import sys
 import socket
+import os
+import datetime
+import time
+
 
 # Read server IP address and port from command-line arguments
 serverIP = sys.argv[1]
@@ -24,15 +28,7 @@ print('The server is ready to receive on port:  ' + str(serverPort) + '\n')
 
 # loop forever listening for incoming connection requests on "welcoming" socket
 while True:
-    # Accept incoming connection requests; allocate a new socket for data communication
-    connectionSocket, address = serverSocket.accept()
-    print("Socket created for client " + address[0] + ", " + str(address[1]))
 
-    # Receive and print the client data in bytes from "data" socket
-    data = connectionSocket.recv(dataLen).decode()
-    print("Data from client: " + data)
-
-    # Echo back to client
-    connectionSocket.send(data.encode())
+    pass
 
 
