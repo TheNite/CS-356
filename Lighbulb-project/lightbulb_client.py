@@ -44,10 +44,7 @@ def response_output(output_data, server_address):
           f'\nMessage ID: {server_message_id}')
 
 
-if action == 1:
-    color = input("Set/Change color of light bulb (blue, yellow, red, green, orange): ")
-    data_action = color
-elif action == 2:
+if action == 2 or action == 1:
     print('Please input color rgb % you would like to change:')
     red = float(input("Red %: "))
     green = float(input('Green %: '))
@@ -57,7 +54,7 @@ elif action == 3:
     brightness = float(input("Change light bulb brightness %: "))
     data_action = brightness
 
-data = struct.pack(f'!hhihh', message_type, return_code, message_id, action, data_action)
+data = struct.pack(f'!hhihf', message_type, return_code, message_id, action, data_action)
 
 
 while True:
